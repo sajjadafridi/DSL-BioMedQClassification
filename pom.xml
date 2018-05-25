@@ -1,12 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>edu.emory.clir</groupId>
-	<artifactId>clearnlp-tutorial</artifactId>
-	<version>3.2.0</version>
+	<groupId>pk.edu.kics.DSL-BioMedQClassification</groupId>
+	<artifactId>DSL-BioMedQClassification</artifactId>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	<name>clearnlp-tutorial</name>
-	<url>http://www.clearnlp.com</url>
+	<name>DSL-BioMedQClassification</name>
 	<repositories>
 		<repository>
 			<id>ziy-mvnrepo-releases</id>
@@ -14,24 +13,6 @@
 			<url>https://raw.github.com/ziy/mvn-releases/master/</url>
 		</repository>
 	</repositories>
-	<scm>
-		<url>git@github.com:oaqa/bioasq.git</url>
-		<connection>scm:git:git@github.com:oaqa/bioasq.git</connection>
-		<developerConnection>scm:git:git@github.com:oaqa/bioasq.git</developerConnection>
-	</scm>
-
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
-
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>9</version>
-	</parent>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
