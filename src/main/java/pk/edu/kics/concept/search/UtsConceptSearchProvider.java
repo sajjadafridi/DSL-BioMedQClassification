@@ -67,7 +67,7 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
 
   private static final String FINDER_TARGET = "atom";
 
-  private static final int MAX_RETRY = 5;
+  private static final int MAX_RETRY = 10;
 
   public void initialize() throws UtsFault_Exception {
     this.service = "http://umlsks.nlm.nih.gov";
@@ -119,7 +119,6 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
       optional = search(string, "normalizedString");
     }
 	} catch (AnalysisEngineProcessException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	return optional;
@@ -128,39 +127,41 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
   @Override
   public List<Concept> search(String string, String searchType, int hits) {
     List<UiLabel> results = null;
+    List<Concept> concepts = new ArrayList<>();
       try {
 		results = finderService.findConcepts(getSingleUseTicket(), version, FINDER_TARGET, string,
 		          searchType, createFinderPsf(hits));
+		
+		for (UiLabel result : results) {
+		      ConceptDTO concept = null;
+		        try {
+					concept = contentService.getConcept(getSingleUseTicket(), version, result.getUi());
+				} catch (gov.nih.nlm.uts.webservice.content.UtsFault_Exception | UtsFault_Exception e) {
+					e.printStackTrace();
+				}
+		      List<Type> types = new ArrayList<>();
+		      for (String semanticTypeId : concept.getSemanticTypes()) {
+		        SemanticTypeDTO semType = null;
+		          try {
+					semType = semanticNetworkService.getSemanticType(getSingleUseTicket(), version,
+					          semanticTypeId);
+				} catch (gov.nih.nlm.uts.webservice.semnet.UtsFault_Exception | UtsFault_Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        types.add(new Type("umls:" + semType.getUi(), "umls:" + semType.getValue(),
+		                        "umls:" + semType.getAbbreviation()));
+		      }
+		      concepts.add(createConcept(concept.getDefaultPreferredName(),
+		              "UMLS:" + concept.getUi(), types));
+		    }
+
 	} catch (gov.nih.nlm.uts.webservice.finder.UtsFault_Exception | UtsFault_Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-    List<Concept> concepts = new ArrayList<>();
-    for (UiLabel result : results) {
-      ConceptDTO concept = null;
-        try {
-			concept = contentService.getConcept(getSingleUseTicket(), version, result.getUi());
-		} catch (gov.nih.nlm.uts.webservice.content.UtsFault_Exception | UtsFault_Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-      List<Type> types = new ArrayList<>();
-      for (String semanticTypeId : concept.getSemanticTypes()) {
-        SemanticTypeDTO semType = null;
-          try {
-			semType = semanticNetworkService.getSemanticType(getSingleUseTicket(), version,
-			          semanticTypeId);
-		} catch (gov.nih.nlm.uts.webservice.semnet.UtsFault_Exception | UtsFault_Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        types.add(new Type("umls:" + semType.getUi(), "umls:" + semType.getValue(),
-                        "umls:" + semType.getAbbreviation()));
-      }
-      concepts.add(createConcept(concept.getDefaultPreferredName(),
-              "UMLS:" + concept.getUi(), types));
-    }
-    return concepts;
+    
+        return concepts;
   }
 
   private Concept createConcept(String name, String ids, List<Type> types) {
@@ -179,7 +180,7 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
       } catch (gov.nih.nlm.uts.webservice.security.UtsFault_Exception e) {
         if (++retries == MAX_RETRY) throw e;
         try {
-          Thread.sleep(5000);
+          Thread.sleep(1000);
         } catch (InterruptedException e1) {
           e1.printStackTrace();
         }

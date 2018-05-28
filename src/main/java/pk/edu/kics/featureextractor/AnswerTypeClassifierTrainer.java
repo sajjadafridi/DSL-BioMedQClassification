@@ -82,8 +82,9 @@ public class AnswerTypeClassifierTrainer {
 		//featureConstructor = new FeatureConstructorProviderImpl();
 
 		classifier = new LibLinearProvider();
+		classifier.initialize();
 		// labels for training instances
-		String[] atGsLabelFiles = { "resource/4b-dev-gslabel-tmtool.json", "resource/4b-dev-gslabel-uts.json" };
+		String[] atGsLabelFiles = { "resource/classifier-data/4b-dev-gslabel-tmtool.json", "resource/classifier-data/4b-dev-gslabel-uts.json" };
 		Gson gson = QuestionAnswerTypes.getGson();
 		Collection<QuestionAnswerTypes> qats = Arrays.stream(atGsLabelFiles).map(atGsLabelFile -> {
 				
@@ -117,15 +118,17 @@ public class AnswerTypeClassifierTrainer {
 			qids = new ArrayList<>();
 		}
 		limit = 1;
+		featureConstructor = new FeatureConstructorProviderImpl();
 
 	}
 
 	public void process(ArrayList<QuestionUtil> question) throws AnalysisEngineProcessException {
-		for(int i=0;i<question.size();i++) {
-		featureConstructor = new FeatureConstructorProviderImpl();
+		for(int i=0;i<10;i++) {
+		
 		Map<String, Double> features = featureConstructor.constructFeatures(question.get(i));
 		trainX.add(features);
 		String qid = question.get(i).getId();
+		
 		trainY.add(qid2labels.get(qid));
 		if (cvPredictFile != null) {
 			qids.add(qid);
@@ -135,9 +138,7 @@ public class AnswerTypeClassifierTrainer {
 		}    
 	
 	}
-		
 	
-
 	public void collectionProcessComplete() throws AnalysisEngineProcessException {
 
 		if (cvPredictFile != null) {

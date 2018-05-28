@@ -15,10 +15,8 @@ package pk.edu.kics.concept.search;
  */
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,12 +25,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
+import org.apache.uima.jcas.JCas;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gov.nih.nlm.uts.webservice.security.UtsFault_Exception;
 import pk.edu.kics.utill.Concept;
 import pk.edu.kics.utill.TypeUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This {@link JCasAnnotator_ImplBase} assumes an input {@link JCas} contains a
@@ -62,23 +62,17 @@ public class ConceptSearcher {
 	public List<Concept> ConceptSearch(List<Concept> concepts) {
 		
 		List<Concept> conceptList= new ArrayList<>();
+		try
+		{
 		List<Concept> missingIdConcepts = concepts.stream().filter(concept -> concept.getids().isEmpty()).collect(toList());
 		// retrieving IDs
 		System.out.println("Retrieving IDs for " + missingIdConcepts.size() + " concepts.");
-		
 		for(;i<missingIdConcepts.size();i++) {
 			Optional<Concept> response = conceptSearchProvider.search(missingIdConcepts.get(i).getConceptPreferredName());
 			response.ifPresent(c -> {
 				missingIdConcepts.set(i, TypeUtil.mergeConcept(missingIdConcepts.get(i), c));
 			});   
 		}
-		/*for (Concept concept : missingIdConcepts) {
-			Optional<Concept> response = conceptSearchProvider.search(concept.getConceptPreferredName());
-			Concept cm;
-			response.ifPresent(c -> {
-				cm=TypeUtil.mergeConcept(concept, c);
-			});        
-		}*/
 		int j=0;
 		for (int k = 0; k < concepts.size(); k++) {
 			if(concepts.get(k).getids().isEmpty())
@@ -107,6 +101,11 @@ public class ConceptSearcher {
 		if (LOG.isDebugEnabled()) {
 			// concepts.stream().map(TypeUtil::toString).forEachOrdered(c -> LOG.debug(" -
 			// {}", c));
+		}
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
 		}
 		return conceptList;
 	}

@@ -14,15 +14,18 @@ public class QuestionUtil {
 	private String id;
 	
 	public QuestionUtil(List<Concept> concepts, List<Token> tokens, String focus,String bo,String myId) {
-		super();
 		this.concepts = concepts;
 		this.tokens = tokens;
 		this.focus = focus;
 		this.type="factoid";
 		this.body=bo;
-		this.id=myId;
+		this.id="513f45abbee46bd34c000013";
 	}
 	
+	public QuestionUtil() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public List<ConceptMention> getConceptMentions()
 	{
 		//return concepts.stream().map(concept -> getConceptMentions()).flatMap(List::stream).collect(Collectors.toList());

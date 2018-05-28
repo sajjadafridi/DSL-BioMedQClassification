@@ -33,7 +33,7 @@ public class LingPipeCacheProvider
 		if (!dataMap.containsKey(question)) {
 			
 			try {
-				concepts.add(Lingpipe.getConcept(question));
+				concepts.addAll(Lingpipe.getConcept(question));
 				dataMap.put(question, concepts);
 			} catch (IOException e) {
 				e.printStackTrace();

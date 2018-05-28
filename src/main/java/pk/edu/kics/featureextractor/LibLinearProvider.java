@@ -13,7 +13,6 @@
  */
 
 package pk.edu.kics.featureextractor;
-
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -38,7 +37,6 @@ import org.apache.uima.resource.metadata.ResourceMetaData;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.primitives.Ints;
-
 import de.bwaldvogel.liblinear.FeatureNode;
 import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
@@ -88,7 +86,7 @@ public class LibLinearProvider implements ClassifierProvider {
 		}
 		balanceWeight = false;
 		// parameter
-		SolverType solver = SolverType.valueOf("LIR_LR"); // -s 0
+		SolverType solver = SolverType.L1R_LR; // -s 0 
 		double C = 1.0; // cost of constraints violation
 		double eps = 0.01; // stopping criteria
 		parameter = new Parameter(solver, C, eps);

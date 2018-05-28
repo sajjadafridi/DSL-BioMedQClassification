@@ -35,7 +35,7 @@ import pk.edu.kics.utill.Type;
 public class Lingpipe {
 
 	private static Chunker chunker;
-	Concept c = null;
+	ArrayList<Concept> concepts=new ArrayList<>();
 	public boolean initialize() throws ClassNotFoundException, IOException {
 
 		try (ObjectInputStream ois = new ObjectInputStream(
@@ -48,17 +48,18 @@ public class Lingpipe {
 		return true;
 	}
 
-	public Concept getConcepts(String text) throws AnalysisEngineProcessException {
+	public List<Concept> getConcepts(String text) throws AnalysisEngineProcessException {
 
 		Chunking chunking = chunker.chunk(text);
 		chunking.chunkSet().stream().forEach(chunk -> {
-			c = new Concept();
+			Concept c = new Concept();
 			c.setNames(Arrays.asList(text.substring(chunk.start(), chunk.end())));
 			System.out.println(chunk.start() + ":" + chunk.end());
 			c.setTypes(Arrays.asList(new Type("lingpipe:" + chunk.type(), "lingpipe:" + chunk.type())));
 			c.setMentions(Arrays.asList(new ConceptMention(text.substring(chunk.start(), chunk.end()), 0.0)));
+			concepts.add(c);
 		});
-		return c;
+		return concepts;
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -67,7 +68,7 @@ public class Lingpipe {
 		test.getConcepts("Which antibody is implicated in the Bickerstaff's Brainstem encephalitis?");
 	}
 	
-	public static Concept getConcept(String question) throws ClassNotFoundException, IOException, AnalysisEngineProcessException{
+	public static List<Concept> getConcept(String question) throws ClassNotFoundException, IOException, AnalysisEngineProcessException{
 		Lingpipe test = new Lingpipe();
 		test.initialize();
 		return test.getConcepts(question);

@@ -19,6 +19,7 @@ import com.google.common.collect.*;
 import com.google.common.io.Files;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.resource.Resource;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +50,7 @@ public interface ClassifierProvider {
 
   Map<String, Double> infer(Map<String, Double> features) throws AnalysisEngineProcessException;
 
+  public boolean initialize() throws ResourceInitializationException;
   default double infer(Map<String, Double> features, String label)
           throws AnalysisEngineProcessException {
     return infer(features).get(label);
@@ -249,7 +251,8 @@ public interface ClassifierProvider {
     return lid2label;
   }
 
-  static void saveIdKeyMap(Map<Integer, String> id2key, File idKeyMapFile) throws IOException {
+  @SuppressWarnings("deprecation")
+static void saveIdKeyMap(Map<Integer, String> id2key, File idKeyMapFile) throws IOException {
     String lines = id2key.entrySet().stream().map(entry -> entry.getKey() + "\t" + entry.getValue())
             .collect(joining("\n"));
     Files.write(lines, idKeyMapFile, Charsets.UTF_8);
