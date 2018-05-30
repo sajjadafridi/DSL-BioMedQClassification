@@ -13,6 +13,10 @@
  */
 
 package pk.edu.kics.featureextractor;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import de.bwaldvogel.liblinear.*;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -20,29 +24,14 @@ import static java.util.stream.Collectors.toMap;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.IntStream;
-
-import org.apache.uima.UimaContext;
-import org.apache.uima.UimaContextAdmin;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.cas.Feature;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.apache.uima.resource.ResourceManager;
-import org.apache.uima.resource.metadata.ResourceMetaData;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.primitives.Ints;
-import de.bwaldvogel.liblinear.FeatureNode;
-import de.bwaldvogel.liblinear.Linear;
-import de.bwaldvogel.liblinear.Model;
-import de.bwaldvogel.liblinear.Problem;
-import de.bwaldvogel.liblinear.Parameter;
-import de.bwaldvogel.liblinear.SolverType;
 
 public class LibLinearProvider implements ClassifierProvider {
 
@@ -55,10 +44,8 @@ public class LibLinearProvider implements ClassifierProvider {
 	private BiMap<String, Integer> label2lid;
 	private Model model;
 	private Parameter parameter;
-	
-	
+
 	public boolean initialize() throws ResourceInitializationException {
-		// boolean ret = super.initialize(aSpecifier, aAdditionalParams);
 		// feature id map
 		if ((featIndexFile = new File((String) ("resource/classifier-data/feat-index-file"))).exists()) {
 			try {
@@ -86,7 +73,7 @@ public class LibLinearProvider implements ClassifierProvider {
 		}
 		balanceWeight = false;
 		// parameter
-		SolverType solver = SolverType.L1R_LR; // -s 0 
+		SolverType solver = SolverType.L1R_LR; // -s 0
 		double C = 1.0; // cost of constraints violation
 		double eps = 0.01; // stopping criteria
 		parameter = new Parameter(solver, C, eps);
@@ -95,7 +82,8 @@ public class LibLinearProvider implements ClassifierProvider {
 	}
 
 	public Map<String, Double> infer(Map<String, Double> features) {
-		Feature []x= IntStream.range(1, fid2feat.size()+1).mapToObj(j->new FeatureNode(j, features.getOrDefault(fid2feat.get(j), 0.0))).toArray(Feature[]::new);
+		Feature[] x = IntStream.range(1, fid2feat.size() + 1)
+				.mapToObj(j -> new FeatureNode(j, features.getOrDefault(fid2feat.get(j), 0.0))).toArray(Feature[]::new);
 		double[] values = new double[lid2label.size()];
 		Linear.predictValues(model, (de.bwaldvogel.liblinear.Feature[]) x, values);
 		if (lid2label.size() == 2) {
@@ -139,13 +127,28 @@ public class LibLinearProvider implements ClassifierProvider {
 		assert X.size() == Y.size();
 		int dataCount = X.size();
 		int featCount = fid2feat.size();
-		System.out.println("Training for {} instances, {} features, {} labels."+ dataCount + featCount+lid2label.size());
+		System.out.println(
+				"Training for {} instances, {} features, {} labels." + dataCount + featCount + lid2label.size());
 		prob.l = dataCount;
 		prob.n = featCount;
-		prob.x = (de.bwaldvogel.liblinear.Feature[][]) X.stream().map(x -> IntStream.range(1, featCount + 1)
+		/*
+		 * Feature [][] p= new Feature[X.size()][featCount]; for(int i=0;i<X.size();i++)
+		 * { Map<String, Double> x = X.get(i); for(int j=0;j<featCount;j++) {
+		 * FeatureNode fn=new FeatureNode(j,x.getOrDefault(fid2feat.get(j),0.0));
+		 * p[i][j]=new FeatureNode(j,x.getOrDefault(fid2feat.get(j),0.0));
+		 * System.out.println(fn.value);
+		 * 
+		 * }
+		 * 
+		 * }
+		 */
+
+		prob.x = X.stream()
+				.map(x -> IntStream.range(1, featCount + 1)
 						.mapToObj(j -> new FeatureNode(j, x.getOrDefault(fid2feat.get(j), 0.0)))
 						.toArray(Feature[]::new))
 				.toArray(Feature[][]::new);
+
 		prob.y = Y.stream().mapToDouble(label2lid::get).toArray();
 		if (balanceWeight) {
 			Map<String, Long> y2count = Y.stream().collect(groupingBy(Function.identity(), counting()));
@@ -156,6 +159,7 @@ public class LibLinearProvider implements ClassifierProvider {
 			int[] weightLabels = y2weight.entrySet().stream().map(Map.Entry::getKey).mapToInt(label2lid::get).toArray();
 			parameter.setWeights(weights, weightLabels);
 		}
+		// train the model file
 		model = Linear.train(prob, parameter);
 		try {
 			model.save(modelFile);
@@ -167,7 +171,6 @@ public class LibLinearProvider implements ClassifierProvider {
 		}
 	}
 
-	
 	public void crossValidate(Problem problem, int nrFold) {
 		double[] target = new double[problem.l];
 		Linear.crossValidation(problem, parameter, nrFold, target);

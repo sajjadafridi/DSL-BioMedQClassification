@@ -1,7 +1,5 @@
 package pk.edu.kics.utill;
 
-import java.util.ArrayList;
-
 public class Token {
 	
 	public String word ;

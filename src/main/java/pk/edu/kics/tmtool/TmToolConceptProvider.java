@@ -29,10 +29,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HttpContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.jcas.JCas;
-import org.apache.uima.resource.ResourceInitializationException;
-import org.apache.uima.resource.ResourceSpecifier;
-
 import java.io.IOException;
 import java.util.*;
 import org.apache.commons.io.IOUtils;
@@ -46,7 +42,7 @@ public class TmToolConceptProvider {
 
 	private static final String URL_PREFIX = "https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/";
 
-	protected Set<String> triggers = ImmutableSet.of("DNorm");
+	protected Set<String> triggers = ImmutableSet.of("DNorm","tmVar","tmChem","GNormPlus");
 
 	private static HttpClientBuilder clientBuilder = HttpClientBuilder.create().disableRedirectHandling()
 			.setServiceUnavailableRetryStrategy(new ServiceUnavailableRetryStrategy() {
@@ -69,10 +65,10 @@ public class TmToolConceptProvider {
 		this.triggers = triggers;
 	}
 
-	// public List<Concept> getConcepts(ArrayList<String> question)
-	// {
-	// return getConcepts(Collections.singletonList(question));
-	// }
+//	 public List<Concept> getConcepts(ArrayList<String> question)
+//	 {
+//	 return getConcepts(Collections.singletonList(question));
+//	 }
 
 	public List<Concept> getConcepts(List<String> question1) throws AnalysisEngineProcessException {
 		// send request
@@ -147,10 +143,7 @@ public class TmToolConceptProvider {
 			if (sentText.length() != recvText.length()) {
 				throw TmToolConceptProviderException.unequalTextLength(trigger, sentText, recvText);
 			}
-			// if (sentText.equals(recvText)) {
-			// throw TmToolConceptProviderException.textChanged(trigger, sentText,
-			// recvText);
-			// }
+
 		}
 		return denotationStrings;
 	}
@@ -165,17 +158,17 @@ public class TmToolConceptProvider {
 		response = client.execute(get);
 		return IOUtils.toString(response.getEntity().getContent());
 	}
-
+	
+	public static List<Concept> getConcept(String question) throws AnalysisEngineProcessException {
+		TmToolConceptProvider test = new TmToolConceptProvider();
+		return test.getConcepts(Arrays.asList(question));
+	}
+	
 	public static void main(String args[]) throws AnalysisEngineProcessException {
 		String s = "Which antibody is implicated in the Bickerstaff's Brainstem encephalitis?";
 		List<String> myList = new ArrayList<String>(Arrays.asList(s.split(",")));
 		TmToolConceptProvider test = new TmToolConceptProvider();
 		test.getConcepts(myList);
-	}
-	
-	public static List<Concept> getConcept(String question) throws AnalysisEngineProcessException {
-		TmToolConceptProvider test = new TmToolConceptProvider();
-		return test.getConcepts(Arrays.asList(question));
 	}
 
 }

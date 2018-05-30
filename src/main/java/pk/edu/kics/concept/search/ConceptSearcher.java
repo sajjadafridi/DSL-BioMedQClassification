@@ -1,19 +1,5 @@
 package pk.edu.kics.concept.search;
 
-/*
- * Open Advancement Question Answering (OAQA) Project Copyright 2016 Carnegie Mellon University
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations
- * under the License.
- */
-
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -25,35 +11,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
-import org.apache.uima.jcas.JCas;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gov.nih.nlm.uts.webservice.security.UtsFault_Exception;
 import pk.edu.kics.utill.Concept;
 import pk.edu.kics.utill.TypeUtil;
 
-/**
- * This {@link JCasAnnotator_ImplBase} assumes an input {@link JCas} contains a
- * collection of identified {@link Concept}s, but some of them have not been
- * associated with a {@link Concept} in a knowledge, i.e. no Concept ID or
- * synonym. The goal of this class is to use a {@link ConceptSearchProvider} to
- * look up the concept name, and a {@link SynonymExpansionProvider} to find the
- * synonyms of the concept.
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 4/19/15
- */
 public class ConceptSearcher {
 
 	//global variables under class
 	int i=0;
 	private ConceptSearchProvider conceptSearchProvider;
 	private SynonymExpansionProvider synonymExpanisonProvider;
-
 	private static final String NAME_NORMALIZATION = " \\(.*?\\)$| \\[.*?\\]$|\\*|\\^";
-	private static final Logger LOG = LoggerFactory.getLogger(ConceptSearcher.class);
-
 	public void initialiaze() throws UtsFault_Exception {
 		conceptSearchProvider = new UtsConceptSearchProvider();
 		synonymExpanisonProvider = new UtsSynonymExpansionProvider();
@@ -98,10 +66,6 @@ public class ConceptSearcher {
 			concept.setNames(names);
 			conceptList.add(concept);
 			}
-		if (LOG.isDebugEnabled()) {
-			// concepts.stream().map(TypeUtil::toString).forEachOrdered(c -> LOG.debug(" -
-			// {}", c));
-		}
 		}
 		catch(Exception ex)
 		{

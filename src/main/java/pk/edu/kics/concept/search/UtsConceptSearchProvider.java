@@ -16,7 +16,6 @@ package pk.edu.kics.concept.search;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -34,21 +33,8 @@ import gov.nih.nlm.uts.webservice.semnet.SemanticTypeDTO;
 import gov.nih.nlm.uts.webservice.semnet.UtsWsSemanticNetworkController;
 import gov.nih.nlm.uts.webservice.semnet.UtsWsSemanticNetworkControllerImplService;
 import pk.edu.kics.utill.Concept;
-import pk.edu.kics.utill.Type;
+import pk.edu.kics.utill.SemanticType;
 
-/**
- * This {@link ConceptSearchProvider} uses <a href="https://uts.nlm.nih.gov/">UMLS Terminology
- * Service</a> to look up concept names and identify the {@link Concept}.
- * It uses the <a href="https://github.com/ziy/uts-api">UTS WSDL API 2.0</a> to try different
- * <tt>search type</tt>s in a fixed order: <tt>exact</tt>, <tt>words</tt>,
- * <tt>normalizedString</tt>.
- * If nothing is returned after all, a <tt>None</tt> will be returned.
- *
- * @see UtsSynonymExpansionProvider
- * @see CachedUtsConceptSearchProvider
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 4/4/15
- */
 public class UtsConceptSearchProvider implements ConceptSearchProvider {
 
   private String service;
@@ -67,7 +53,7 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
 
   private static final String FINDER_TARGET = "atom";
 
-  private static final int MAX_RETRY = 10;
+  private static final int MAX_RETRY = 20;
 
   public void initialize() throws UtsFault_Exception {
     this.service = "http://umlsks.nlm.nih.gov";
@@ -101,7 +87,6 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
             .getUtsWsSemanticNetworkControllerImplPort();
   }
 
-  @Override
   public Optional<Concept> search(String string){
     Optional<Concept> optional = null;
 	try {
@@ -124,7 +109,6 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
 	return optional;
   }
 
-  @Override
   public List<Concept> search(String string, String searchType, int hits) {
     List<UiLabel> results = null;
     List<Concept> concepts = new ArrayList<>();
@@ -139,7 +123,7 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
 				} catch (gov.nih.nlm.uts.webservice.content.UtsFault_Exception | UtsFault_Exception e) {
 					e.printStackTrace();
 				}
-		      List<Type> types = new ArrayList<>();
+		      List<SemanticType> semanticTypes = new ArrayList<>();
 		      for (String semanticTypeId : concept.getSemanticTypes()) {
 		        SemanticTypeDTO semType = null;
 		          try {
@@ -149,26 +133,25 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		        types.add(new Type("umls:" + semType.getUi(), "umls:" + semType.getValue(),
+		        semanticTypes.add(new SemanticType("umls:" + semType.getUi(), "umls:" + semType.getValue(),
 		                        "umls:" + semType.getAbbreviation()));
 		      }
 		      concepts.add(createConcept(concept.getDefaultPreferredName(),
-		              "UMLS:" + concept.getUi(), types));
+		              "UMLS:" + concept.getUi(), semanticTypes));
 		    }
 
 	} catch (gov.nih.nlm.uts.webservice.finder.UtsFault_Exception | UtsFault_Exception e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
     
         return concepts;
   }
 
-  private Concept createConcept(String name, String ids, List<Type> types) {
+  private Concept createConcept(String name, String ids, List<SemanticType> semanticTypes) {
 	  Concept concept=new Concept();
 	  concept.setIds(Arrays.asList(ids));
 	  concept.setNames(Arrays.asList(name));
-	  concept.setTypes(types);
+	  concept.setTypes(semanticTypes);
 	  return concept;
   }
   private String getSingleUseTicket()
@@ -195,16 +178,8 @@ public class UtsConceptSearchProvider implements ConceptSearchProvider {
   }
 
   public static void main(String[] args) throws Exception {
-    /*UtsConceptSearchProvider service = new UtsConceptSearchProvider(args[0], args[1], args[2],
-            args[3]);
-    JCas jcas = JCasFactory.createJCas();
-    Optional<Concept> concept = service.search(jcas, "NBEAL2", "words");
-    if (concept.isPresent()) {
-      System.out.println(TypeUtil.getConceptPreferredName(concept.get()) + " "
-              + TypeUtil.getFirstConceptId(concept.get()));
-      TypeUtil.getConceptTypes(concept.get())
-              .stream().map(semanticType -> " - " + semanticType.getName() + " ["
-                      + semanticType.getId() + ", " + semanticType.getAbbreviation() + "]")
-              .forEach(System.out::println);*/
+    UtsConceptSearchProvider service = new UtsConceptSearchProvider();
+    service.initialize();
+    Optional<Concept> result = service.search("protien");
     }
 }

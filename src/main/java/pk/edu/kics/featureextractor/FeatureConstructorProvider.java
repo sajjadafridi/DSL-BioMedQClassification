@@ -16,24 +16,12 @@ package pk.edu.kics.featureextractor;
 
 import java.util.Map;
 
-import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.Resource;
 
-import pk.edu.kics.utill.QuestionUtil;
+import pk.edu.kics.utill.Question;
 
-/**
- * An interface that creates a feature vector from an input {@link JCas}.
- *
- * TODO: To be migrated to {@link edu.cmu.lti.oaqa.baseqa.learning_base.Scorer},
- * where a candidate is given in the method
- * {@link edu.cmu.lti.oaqa.baseqa.learning_base.Scorer#score(JCas, Object)}.
- *
- * @see edu.cmu.lti.oaqa.baseqa.learning_base.Scorer
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 4/5/15
- */
 public interface FeatureConstructorProvider extends Resource {
 
-  Map<String, Double> constructFeatures(QuestionUtil question);
+  Map<String, Double> constructFeatures(Question question);
 
 }

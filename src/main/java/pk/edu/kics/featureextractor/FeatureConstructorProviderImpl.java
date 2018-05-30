@@ -38,9 +38,9 @@ import org.apache.uima.util.Logger;
 import com.google.common.io.Resources;
 
 import pk.edu.kics.utill.ConceptMention;
-import pk.edu.kics.utill.QuestionUtil;
+import pk.edu.kics.utill.Question;
 import pk.edu.kics.utill.Token;
-import pk.edu.kics.utill.Type;
+import pk.edu.kics.utill.SemanticType;
 
 public class FeatureConstructorProviderImpl implements FeatureConstructorProvider {
 
@@ -68,7 +68,7 @@ public class FeatureConstructorProviderImpl implements FeatureConstructorProvide
 		return true;
 	}
 
-	public Map<String, Double> constructFeatures(QuestionUtil question) {
+	public Map<String, Double> constructFeatures(Question question) {
 
 		Map<String, Double> features = new HashMap<>();
 		// question type
@@ -79,7 +79,7 @@ public class FeatureConstructorProviderImpl implements FeatureConstructorProvide
 			double score = cmention.getScore();
 			if (Double.isNaN(score))
 				score = 1.0;
-			for (Type st : question.getConceptType()) {
+			for (SemanticType st : question.getConceptType()) {
 				String semTypeAbbr = st.getAbb();
 				String semType = "concept-type:" + semTypeAbbr;
 				features.put(semType, score);

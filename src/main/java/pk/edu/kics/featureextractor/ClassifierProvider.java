@@ -14,35 +14,39 @@
 
 package pk.edu.kics.featureextractor;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.*;
-import com.google.common.io.Files;
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.resource.Resource;
-import org.apache.uima.resource.ResourceInitializationException;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.*;
+import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.resource.ResourceInitializationException;
 
-/**
- * The interface for wrapping a classifier.
- * It is used by both general-purpose
- * {@link edu.cmu.lti.oaqa.baseqa.learning_base.ClassifierTrainer} and
- * {@link edu.cmu.lti.oaqa.baseqa.learning_base.ClassifierPredictor} classes, and specific
- * classifier training and prediction classes, e.g.
- * {@link edu.cmu.lti.oaqa.baseqa.answer_type.AnswerTypeClassifierTrainer} and
- * {@link edu.cmu.lti.oaqa.baseqa.answer_type.AnswerTypeClassifierPredictor}.
- *
- * @see edu.cmu.lti.oaqa.baseqa.learning_base.ClassifierTrainer
- * @see edu.cmu.lti.oaqa.baseqa.learning_base.ClassifierPredictor
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 4/5/15
- */
+import com.google.common.base.Charsets;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Sets;
+import com.google.common.io.Files;
+
+
 public interface ClassifierProvider {
 
   enum ResampleType {DOWN, UP, NONE}
@@ -166,6 +170,7 @@ public interface ClassifierProvider {
         cvTrainX.add(X.get(cvTrainIndex));
         cvTrainY.add(Y.get(cvTrainIndex));
       });
+ 
       trainMultiLabel(cvTrainX, cvTrainY, resampleType, false);
       for (int cvTestIndex : cvTestIndexes) {
         List<String> result = predict(X.get(cvTestIndex), limit).stream().collect(toList());

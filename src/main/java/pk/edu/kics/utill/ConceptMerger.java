@@ -61,7 +61,7 @@ public class ConceptMerger {
 					.distinct().collect(toList());
 			List<String> names = cuuids.stream().map(uuid2names::get).flatMap(Set::stream).filter(Objects::nonNull)
 					.distinct().collect(toList());
-			List<Type> types = cuuids.stream().map(uuid2types::get).flatMap(Set::stream).filter(Objects::nonNull)
+			List<SemanticType> semanticTypes = cuuids.stream().map(uuid2types::get).flatMap(Set::stream).filter(Objects::nonNull)
 					.distinct().map(type -> parseTypeList(type)).collect(toList());
 			List<ConceptMention> mentions = cuuids.stream().map(uuid2mentions::get).flatMap(Set::stream)
 					.filter(Objects::nonNull).collect(toList());
@@ -70,7 +70,7 @@ public class ConceptMerger {
 			cp.setids(ids);
 			cp.setNames(names);
 			cp.setMentions(mentions);
-			cp.setTypes(types);
+			cp.setTypes(semanticTypes);
 			return cp;
 		}).collect(toList());
 
@@ -87,13 +87,8 @@ public class ConceptMerger {
 		return alphaNumeric.retainFrom(name.toLowerCase());
 	}
 
-	/*
-	 * private static List<String> toTypeList(ConceptType type) { return
-	 * Arrays.asList(type.getId(), type.getName(), type.getAbbreviation()); }
-	 */
-
-	private static Type parseTypeList(List<String> type) {
-		return new Type(type.get(0), type.get(1));
+	private static SemanticType parseTypeList(List<String> type) {
+		return new SemanticType(type.get(0), type.get(1));
 	}
 
 }

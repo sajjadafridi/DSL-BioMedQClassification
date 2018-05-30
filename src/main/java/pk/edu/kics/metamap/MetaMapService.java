@@ -6,7 +6,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -23,10 +22,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
-import org.mapdb.HTreeMap;
-
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
@@ -38,8 +33,9 @@ import pk.edu.kics.metamap.MetaMapObject.Phrase;
 import pk.edu.kics.metamap.MetaMapObject.Utterance;
 import pk.edu.kics.utill.Concept;
 import pk.edu.kics.utill.ConceptMention;
-import pk.edu.kics.utill.Type;
+import pk.edu.kics.utill.SemanticType;
 
+@SuppressWarnings("restriction")
 public class MetaMapService {
 
 	private GenericObject conf;
@@ -157,9 +153,9 @@ public class MetaMapService {
 							c.setMentions(Arrays.asList(
 									new ConceptMention(css.getCandidateMatched(), css.getCandidateScore() / -1000.0)));
 							c.setids(Arrays.asList("UMLS:" + css.getCandidateCUI()));
-							List<Type> semTypes = new ArrayList<>();
+							List<SemanticType> semTypes = new ArrayList<>();
 							for (String semType : css.getSemTypes()) {
-								semTypes.add(new Type("umls:" + semType, "umls:" + semType));
+								semTypes.add(new SemanticType("umls:" + semType, "umls:" + semType));
 							}
 							c.setTypes(semTypes);
 							concepts.add(c);

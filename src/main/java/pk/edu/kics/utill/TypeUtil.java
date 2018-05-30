@@ -1,8 +1,6 @@
 package pk.edu.kics.utill;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -16,10 +14,10 @@ public class TypeUtil {
 	    List<String> ids = Stream.concat(dst.getids().stream(), src.getids().stream())
 	            .filter(Objects::nonNull).distinct().collect(toList());
 	    dst.setIds(ids);
-	    List<Type> types = Stream
+	    List<SemanticType> semanticTypes = Stream
 	            .concat(dst.getTypes().stream(), src.getTypes().stream())
 	            .filter(Objects::nonNull).distinct().collect(toList());
-	    dst.setTypes(types);
+	    dst.setTypes(semanticTypes);
 	    List<ConceptMention> mentions = Stream
 	            .concat(dst.getMentions().stream(), src.getMentions().stream())
 	            .filter(Objects::nonNull).distinct().collect(toList());

@@ -53,7 +53,7 @@ public class QuestionFocusExtractor {
 		QuestionFocusExtractor focus = new QuestionFocusExtractor();
 		String body = "What symptoms characterize the Muenke syndrome?";
 		ArrayList<Token> qtoken = NLPParser.parseQuestion(body);
-		focus.foundFocus(qtoken);
+		//focus.foundFocus(qtoken);
 
 	}
 }

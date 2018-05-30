@@ -15,18 +15,11 @@
 package pk.edu.kics.tmtool;
 
 import java.util.Collection;
-
-/**
- * This {@link RuntimeException} gives detailed debugging information for
- * {@link TmToolConceptProvider} related errors.
- *
- * @see TmToolConceptProvider
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 3/25/16.
- */
 class TmToolConceptProviderException extends RuntimeException {
 
-  private TmToolConceptProviderException(String message) {
+	private static final long serialVersionUID = 651066192651780860L;
+
+private TmToolConceptProviderException(String message) {
     super(message);
   }
 

@@ -18,32 +18,11 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
-
 import pk.edu.kics.utill.Concept;
 import pk.edu.kics.utill.ConceptMention;
-import pk.edu.kics.utill.Type;
+import pk.edu.kics.utill.SemanticType;
 
 import static java.util.stream.Collectors.toList;
-
-/**
- * A utility class for {@link PubAnnotation}, which includes
- * <ul>
- * <li>escaping and normalizing input text for sending {@link PubAnnotation}
- * object through the {@link TmToolConceptProvider} service via
- * {@link #normalizeText(String)},</li>
- * <li>constructing {@link PubAnnotation} data from texts in a batch via
- * {@link #convertTextsToPubAnnotations(List)},</li>
- * <li>and converting the returned
- * {@link edu.cmu.lti.oaqa.bioqa.providers.kb.PubAnnotation.Denotation}s to
- * {@link Concept}s via {@link #convertDenotationsToConcepts(JCas, Collection)}.
- * </li>
- * </ul>
- *
- * @see PubAnnotation
- * @see TmToolConceptProvider
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 3/20/16.
- */
 class PubAnnotationConvertUtil {
 
 	// private static CharMatcher nonAscii = CharMatcher.ASCII.negate();
@@ -95,7 +74,7 @@ class PubAnnotationConvertUtil {
 		String[] objSegs = denotation.getObj().split(":", 2);
 		Concept c = new Concept();
 		try {
-			c.setTypes(Arrays.asList(new Type("tmtool:" + objSegs[0], "tmtool:" + objSegs[0])));
+			c.setTypes(Arrays.asList(new SemanticType("tmtool:" + objSegs[0], "tmtool:" + objSegs[0])));
 			c.setMentions(Arrays.asList(new ConceptMention(
 					jcas.substring(denotation.getSpan().getBegin(), denotation.getSpan().getEnd()), 0.0)));
 			// c.setmentions((Map<String,

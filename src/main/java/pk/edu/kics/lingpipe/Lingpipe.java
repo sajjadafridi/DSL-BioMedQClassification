@@ -19,19 +19,15 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-
 import com.aliasi.chunk.Chunker;
 import com.aliasi.chunk.Chunking;
 import com.aliasi.util.Streams;
-import com.google.common.collect.ImmutableMap;
-
 import pk.edu.kics.utill.Concept;
 import pk.edu.kics.utill.ConceptMention;
-import pk.edu.kics.utill.Type;
+import pk.edu.kics.utill.SemanticType;
 
+@SuppressWarnings("unused")
 public class Lingpipe {
 
 	private static Chunker chunker;
@@ -55,7 +51,7 @@ public class Lingpipe {
 			Concept c = new Concept();
 			c.setNames(Arrays.asList(text.substring(chunk.start(), chunk.end())));
 			System.out.println(chunk.start() + ":" + chunk.end());
-			c.setTypes(Arrays.asList(new Type("lingpipe:" + chunk.type(), "lingpipe:" + chunk.type())));
+			c.setTypes(Arrays.asList(new SemanticType("lingpipe:" + chunk.type(), "lingpipe:" + chunk.type())));
 			c.setMentions(Arrays.asList(new ConceptMention(text.substring(chunk.start(), chunk.end()), 0.0)));
 			concepts.add(c);
 		});

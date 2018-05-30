@@ -18,9 +18,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.resource.Resource;
-
 /**
  * An implementation of this interface can identify the list of synonyms for a given concept ID.
  * It should also override the {@link #accept(String)} method to filter the ID that is supported

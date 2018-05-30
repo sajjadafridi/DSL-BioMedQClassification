@@ -10,14 +10,14 @@ public class Concept implements Serializable  {
 	private static final long serialVersionUID = -1297329388717145620L;
 	private List<String> names;
 	private List<String> ids;
-	private List<Type> types;
+	private List<SemanticType> semanticTypes;
 	private List<ConceptMention> mentions;
 
 	public Concept() {
 		super();
 		names = new ArrayList<>();
 		ids = new ArrayList<>();
-		types = new ArrayList<>();
+		semanticTypes = new ArrayList<>();
 		mentions = new ArrayList<>();
 	}
 
@@ -37,12 +37,12 @@ public class Concept implements Serializable  {
 		this.ids = ids;
 	}
 
-	public List<Type> getTypes() {
-		return types;
+	public List<SemanticType> getTypes() {
+		return semanticTypes;
 	}
 
-	public void setTypes(List<Type> types) {
-		this.types = types;
+	public void setTypes(List<SemanticType> semanticTypes) {
+		this.semanticTypes = semanticTypes;
 	}
 
 	public List<String> getIds() {
@@ -61,8 +61,8 @@ public class Concept implements Serializable  {
 		this.mentions = mentions;
 	}
 	
-	public static List<String> toTypeList(Type type){
-		return Arrays.asList(type.getName(),type.getAbb());
+	public static List<String> toTypeList(SemanticType semanticType){
+		return Arrays.asList(semanticType.getName(),semanticType.getAbb());
 	}
 	
 	public String getConceptPreferredName() {

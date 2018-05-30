@@ -15,17 +15,8 @@
 package pk.edu.kics.tmtool;
 
 import java.util.List;
-
 import com.google.gson.Gson;
 
-/**
- * This class is intended to be used for JSon serialization of PubAnnotation object, which is one
- * of the data formats supported by {@link TmToolConceptProvider}.
- *
- * @see TmToolConceptProvider
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 3/20/16.
- */
 public class PubAnnotation {
 
   private String sourcedb;

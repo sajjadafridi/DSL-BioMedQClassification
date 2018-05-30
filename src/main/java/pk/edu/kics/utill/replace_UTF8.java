@@ -47,8 +47,6 @@ package pk.edu.kics.utill;
      java replace_UTF8 file > result 
 */
 
-import java.net.*;
-import java.lang.*;
 import java.util.*;
 import java.io.*;
 
@@ -1625,7 +1623,8 @@ public class replace_UTF8
    }
 
 
-   public static void main(String args[])
+   @SuppressWarnings("unused")
+public static void main(String args[])
    {
       try
       {

@@ -24,10 +24,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.resource.ResourceInitializationException;
-import org.apache.uima.resource.ResourceSpecifier;
-
 import gov.nih.nlm.uts.webservice.content.AtomDTO;
 import gov.nih.nlm.uts.webservice.content.TermStringDTO;
 import gov.nih.nlm.uts.webservice.content.UtsWsContentController;
