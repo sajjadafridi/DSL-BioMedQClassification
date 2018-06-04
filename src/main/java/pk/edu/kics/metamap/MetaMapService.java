@@ -134,7 +134,7 @@ public class MetaMapService {
 
 	public static List<Concept> getConcept(String question) throws JAXBException, IOException {
 
-		MetaMapService metamap = new MetaMapService("2017AA", "wasimbhalli", "UMLSM@ta1", "cmwasim@gmail.com", false,
+		MetaMapService metamap = new MetaMapService("1516", "wasimbhalli", "UMLSM@ta1", "cmwasim@gmail.com", false,
 				0);
 		List<MetaMapObject> list = metamap.getConcepts(question);
 		List<Concept> concepts = new ArrayList<>();

@@ -20,24 +20,6 @@ import pk.edu.kics.utill.Concept;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * <p>
- * An implementation of this interface can look up a concept (given by its name) in an ontology, and
- * return the most relevant {@link Concept}.
- * </p>
- * <p>
- * In comparison, {@link ConceptProvider} is often used before a {@link ConceptSearchProvider},
- * which identifies the concepts from a plain text.
- * The concepts identified from {@link ConceptProvider} do not have to be existing entries in any
- * ontology, since some {@link ConceptProvider}s make "guess" based on their morphological
- * structures.
- * </p>
- *
- * @see ConceptProvider
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 4/4/15
- */
-
 
 
 

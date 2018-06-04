@@ -18,13 +18,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * An implementation of this interface can identify the list of synonyms for a given concept ID.
- * It should also override the {@link #accept(String)} method to filter the ID that is supported
- * by the particular synonym expansion provider.
- *
- * @author <a href="mailto:ziy@cs.cmu.edu">Zi Yang</a> created on 4/20/15
- */
 public interface SynonymExpansionProvider {
 
   boolean accept(String id);
