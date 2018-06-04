@@ -19,7 +19,7 @@ public class TMToolCacheProvider
 	
 	@SuppressWarnings("unchecked")
 	public static void initialiaze() {
-		System.out.println("Cache Initialized");
+		System.out.println("TmToolCache is Initialized");
 		db = DBMaker.fileDB("resource/cache-map/TmTool-cache.mapdb").checksumHeaderBypass().closeOnJvmShutdown()
 				.fileMmapEnable().make();
 

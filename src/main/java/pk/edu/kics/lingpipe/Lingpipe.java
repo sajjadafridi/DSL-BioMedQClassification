@@ -50,11 +50,12 @@ public class Lingpipe {
 		chunking.chunkSet().stream().forEach(chunk -> {
 			Concept c = new Concept();
 			c.setNames(Arrays.asList(text.substring(chunk.start(), chunk.end())));
-			System.out.println(chunk.start() + ":" + chunk.end());
+			//System.out.println(chunk.start() + ":" + chunk.end());
 			c.setTypes(Arrays.asList(new SemanticType("lingpipe:" + chunk.type(), "lingpipe:" + chunk.type())));
 			c.setMentions(Arrays.asList(new ConceptMention(text.substring(chunk.start(), chunk.end()), 0.0)));
 			concepts.add(c);
 		});
+		System.out.println(concepts.size()+" concepts recieved.\n\n");
 		return concepts;
 	}
 

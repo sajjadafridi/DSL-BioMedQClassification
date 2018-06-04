@@ -81,12 +81,10 @@ public class NLPParser
 				{
 					Token token = new Token(tree.get(i).getWordForm(), tree.get(i).getLemma(), tree.get(i).getPOSTag(), tree.get(i).getLabel());
 				    DEPNode dnode = tree.get(i).getHead();
-					   
 					getHeadToken(dnode,token);
 					QcFeature.add(token);
-					
 				}
-
+				System.out.println("Parsing complete... ");
 			}
 			catch (Exception e) {e.printStackTrace();}
 	      return QcFeature;

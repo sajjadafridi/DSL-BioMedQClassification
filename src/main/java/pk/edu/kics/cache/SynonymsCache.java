@@ -15,7 +15,7 @@ public class SynonymsCache {
 
 	@SuppressWarnings("unchecked")
 	public static void initialiaze() {
-		System.out.println("Cache Initialized");
+		System.out.println("Synonymscache Initialized");
 		db = DBMaker.fileDB("resource/cache-map/synonyms-cache.mapdb").checksumHeaderBypass().closeOnJvmShutdown()
 				.fileMmapEnable().make();
 

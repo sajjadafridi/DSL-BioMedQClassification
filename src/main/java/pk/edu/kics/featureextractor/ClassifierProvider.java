@@ -171,7 +171,7 @@ public interface ClassifierProvider {
         cvTrainY.add(Y.get(cvTrainIndex));
       });
  
-      trainMultiLabel(cvTrainX, cvTrainY, resampleType, false);
+      trainMultiLabel(cvTrainX, cvTrainY, resampleType, true);
       for (int cvTestIndex : cvTestIndexes) {
         List<String> result = predict(X.get(cvTestIndex), limit).stream().collect(toList());
         ret.set(cvTestIndex, result);

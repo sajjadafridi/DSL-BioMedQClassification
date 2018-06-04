@@ -98,7 +98,7 @@ public class MetaMapService {
 		}
 		conf.setFileField("UpLoad_File", file.toString());
 
-		System.out.println("Request ready for {} inputs.\t" + texts);
+		System.out.println("MetamapService:  Request ready for inputs question.\t" + texts);
 		String response = conf.handleSubmission();
 		System.out.println("\n\n");
 		file.deleteOnExit();
@@ -107,7 +107,7 @@ public class MetaMapService {
 		try {
 			mmoStrings = splitResponseByMMO(response);
 		} catch (Exception e) {
-			System.out.println("Returned: {}" + response);
+			System.out.println("Eception occured of type " + response);
 		}
 		return mmoStrings;
 	}
@@ -165,6 +165,7 @@ public class MetaMapService {
 			}
 
 		}
+		System.out.println(concepts.size()+" Concept Recieved\n\n");
 		return concepts;
 	}
 

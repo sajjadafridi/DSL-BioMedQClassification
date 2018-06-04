@@ -89,7 +89,7 @@ public class AnswerTypeClassifierTrainer {
 	}
 
 	public void process(ArrayList<Question> question) throws AnalysisEngineProcessException {
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < question.size(); i++) {
 			Map<String, Double> features = featureConstructor.constructFeatures(question.get(i));
 			trainX.add(features);
 			String qid = question.get(i).getQid();
@@ -123,7 +123,7 @@ public class AnswerTypeClassifierTrainer {
 					bw.write(qid + "\t" + predLabels.stream().collect(joining(";")) + "\n");
 				}
 				f1s.stream().mapToDouble(Double::doubleValue).average()
-						.ifPresent(f1 -> System.out.println("Micro F1: {}" + f1));
+						.ifPresent(f1 -> System.out.println("Micro F1:" + f1));
 				bw.close();
 			} catch (IOException e) {
 				throw new AnalysisEngineProcessException(e);

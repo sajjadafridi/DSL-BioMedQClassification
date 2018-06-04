@@ -25,14 +25,13 @@ import pk.edu.kics.utill.Token;
 public class QuestionClassifier {
 	
 	public static final String[] atGsLabelFiles = { "resource/classifier-data/6b-dev-gslabel-tmtool.json","resource/classifier-data/6b-dev-gslabel-uts.json" };
-	public static final String goldenquestion = "resource/classifier-data/6b-dev-golden.json";
+	public static final String goldenquestion = "resource/phaseb/1b-1-b.json";
+
 	
 	public QuestionClassifier()
 	{
 		
 	}
-	
-	
 
 	public static void main(String[] args) throws UtsFault_Exception, AnalysisEngineProcessException,
 		ClassNotFoundException, IOException, ParseException {
@@ -59,23 +58,23 @@ public class QuestionClassifier {
 
 			// parse question
 			tokens = NLPParser.parseQuestion(question.get(i).getQuestion());
+			//metamap service 
 			concepts.addAll(MetaMapCacheProvider.getConcept(question.get(i).getQuestion()));
 
 			// tmtool
 			try {
 				concepts.addAll(TMToolCacheProvider.getConcept(question.get(i).getQuestion()));
 			} catch (AnalysisEngineProcessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			concepts.addAll(LingPipeCacheProvider.getConcept(question.get(i).getQuestion()));
 
-			// concepts retrieval
+			// Synonyms retrieval
 			concepts.addAll(SynonymsCache.getConcept(question.get(i).getQuestion(), concepts, searcher));
 			// merge the concepts ...
 			concepts = ConceptMerger.merge(concepts);
-
+			System.out.println("Concept merged succcessfully.");
 			// focus extraction
 			focus = QuestionFocusExtractor.foundFocus(tokens);
 

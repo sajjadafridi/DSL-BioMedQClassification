@@ -107,14 +107,15 @@ public class TmToolConceptProvider {
 			String body = question1.get(i);
 			List<PubAnnotation.Denotation> denotations = index2denotations.get(i);
 			try {
-				System.out.println(denotations.toString());
+				//System.out.println(denotations.toString());
 					concepts=PubAnnotationConvertUtil.convertDenotationsToConcepts(body, denotations);
 				// concepts.addAll(PubAnnotationConvertUtil.convertDenotationsToConcepts(jcas,
 				// denotations));
 			} catch (StringIndexOutOfBoundsException e) {
-				System.out.println(e.getMessage());
+				System.out.println("Excption occured of type "+e.getMessage());
 			}
 		}
+		System.out.println(concepts.size()+" concept Recieved.");
 		return concepts;
 	}
 
@@ -126,7 +127,7 @@ public class TmToolConceptProvider {
 		try {
 			response = submitText(trigger, request);
 		} catch (IOException e) {
-			System.out.println("System exception");
+			System.out.println("Exception of type :"+e.getMessage());
 		}
 		PubAnnotation[] outputs = gson.fromJson("[" + response + "]", PubAnnotation[].class);
 		List<PubAnnotation> sortedOutputs = Arrays.stream(outputs)

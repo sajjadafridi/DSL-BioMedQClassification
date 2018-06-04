@@ -14,9 +14,6 @@
 
 package pk.edu.kics.featureextractor;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import de.bwaldvogel.liblinear.*;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -24,14 +21,25 @@ import static java.util.stream.Collectors.toMap;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.IntStream;
+
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.resource.ResourceInitializationException;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+import de.bwaldvogel.liblinear.Feature;
+import de.bwaldvogel.liblinear.FeatureNode;
+import de.bwaldvogel.liblinear.Linear;
+import de.bwaldvogel.liblinear.Model;
+import de.bwaldvogel.liblinear.Parameter;
+import de.bwaldvogel.liblinear.Problem;
+import de.bwaldvogel.liblinear.SolverType;
 
 public class LibLinearProvider implements ClassifierProvider {
 
@@ -128,7 +136,7 @@ public class LibLinearProvider implements ClassifierProvider {
 		int dataCount = X.size();
 		int featCount = fid2feat.size();
 		System.out.println(
-				"Training for {} instances, {} features, {} labels." + dataCount + featCount + lid2label.size());
+				"Training for" + dataCount+ " instances,"+ featCount +" features,"  + lid2label.size() + "labels.");
 		prob.l = dataCount;
 		prob.n = featCount;
 		/*

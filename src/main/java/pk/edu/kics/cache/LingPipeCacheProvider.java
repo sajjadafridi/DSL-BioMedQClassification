@@ -21,7 +21,7 @@ public class LingPipeCacheProvider
 	
 	@SuppressWarnings("unchecked")
 	public static void initialiaze() {
-		System.out.println("Cache Initialized");
+		System.out.println("Lingpipecache Initialized");
 		db = DBMaker.fileDB("resource/cache-map/lingpipe-cache.mapdb").checksumHeaderBypass().closeOnJvmShutdown()
 				.fileMmapEnable().make();
 

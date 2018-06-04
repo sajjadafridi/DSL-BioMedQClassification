@@ -18,7 +18,7 @@ public class MetaMapCacheProvider
 	public static NavigableMap<String, List<Concept>> dataMap;
 	@SuppressWarnings("unchecked")
 	public static void initialiaze() {
-		System.out.println("Cache Initialized");
+		System.out.println("Metamapcache Initialized");
 		db = DBMaker.fileDB("resource/cache-map/metamap-cache.mapdb").checksumHeaderBypass().closeOnJvmShutdown()
 				.fileMmapEnable().make();
 
